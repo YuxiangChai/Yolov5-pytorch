@@ -37,6 +37,10 @@ from models.experimental import attempt_load
 from models.yolov5 import Yolov5
 from models.yolo_repvgg import Yolo_repvgg
 from models.yolo_mobilenet import Yolo_mobilenetv2
+from models.yolo_efficientnet import Yolo_efficientnetv2
+from models.yolo_mobilenetv3 import Yolo_mobilenetv3
+from models.yolo_ghostnet import Yolo_ghostnet
+from models.yolo_resnet18 import Yolo_resnet18
 from utils.autoanchor import check_anchors
 from utils.autobatch import check_train_batch_size
 from utils.callbacks import Callbacks
@@ -130,6 +134,14 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
             model = Yolo_repvgg(cfg, ch=3).to(device)
         elif model_type == 'yolo_mobilenet':
             model = Yolo_mobilenetv2(cfg, ch=3).to(device)
+        elif model_type == 'yolo_efficientnet':
+            model = Yolo_efficientnetv2(cfg, ch=3).to(device)
+        elif model_type == 'yolo_ghostnet':
+            model = Yolo_ghostnet(cfg, ch=3).to(device)
+        elif model_type == 'yolo_mobilenetv3':
+            model = Yolo_mobilenetv3(cfg, ch=3).to(device)
+        elif model_type == 'yolo_resnet18':
+            model = Yolo_resnet18(cfg, ch=3).to(device)
     
     random_input = torch.randn(1, 3, opt.imgsz, opt.imgsz).to(device)
     macs, params = profile(model, inputs=(random_input, ))
@@ -485,12 +497,12 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
 
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='yolov5', choices=['yolov5', 'yolo_repvgg', 'yolo_mobilenet'])
+    parser.add_argument('--model', type=str, default='yolov5', choices=['yolov5', 'yolo_repvgg', 'yolo_mobilenet', 'yolo_efficientnet', 'yolo_ghostnet', 'yolo_mobilenetv3', 'yolo_resnet18'])
     parser.add_argument('--weights', type=str, default=' ', help='initial weights path')
     parser.add_argument('--cfg', type=str, default='models/yolov5s.yaml', help='model.yaml path')
     parser.add_argument('--data', type=str, default='data/VOC.yaml', help='dataset.yaml path')
     parser.add_argument('--hyp', type=str, default='data/hyps/hyp.scratch.yaml', help='hyperparameters path')
-    parser.add_argument('--epochs', type=int, default=2)
+    parser.add_argument('--epochs', type=int, default=200)
     parser.add_argument('--batch-size', type=int, default=32, help='total batch size for all GPUs, -1 for autobatch')
     parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=320, help='train, val image size (pixels)')
     parser.add_argument('--rect', action='store_true', help='rectangular training')
@@ -502,7 +514,7 @@ def parse_opt(known=False):
     parser.add_argument('--bucket', type=str, default='', help='gsutil bucket')
     parser.add_argument('--cache', type=str, nargs='?', const='ram', help='--cache images in "ram" (default) or "disk"')
     parser.add_argument('--image-weights', action='store_true', help='use weighted image selection for training')
-    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser.add_argument('--device', default='0', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--multi-scale', action='store_true', help='vary img-size +/- 50%%')
     parser.add_argument('--single-cls', action='store_true', help='train multi-class data as single-class')
     parser.add_argument('--adam', action='store_true', help='use torch.optim.Adam() optimizer')

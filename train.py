@@ -40,7 +40,9 @@ from models.yolo_mobilenet import Yolo_mobilenetv2
 from models.yolo_efficientnet import Yolo_efficientnetv2
 from models.yolo_mobilenetv3 import Yolo_mobilenetv3
 from models.yolo_ghostnet import Yolo_ghostnet
+from models.yolo_inceptionv4 import Yolo_inceptionv4
 from models.yolo_resnet18 import Yolo_resnet18
+from models.yolo_densenet121 import Yolo_densenet121
 from utils.autoanchor import check_anchors
 from utils.autobatch import check_train_batch_size
 from utils.callbacks import Callbacks
@@ -142,6 +144,10 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
             model = Yolo_mobilenetv3(cfg, ch=3).to(device)
         elif model_type == 'yolo_resnet18':
             model = Yolo_resnet18(cfg, ch=3).to(device)
+        elif model_type == 'yolo_inceptionv4':
+            model = Yolo_inceptionv4(cfg, ch=3).to(device)
+        elif model_type == 'yolo_densenet121':
+            model = Yolo_densenet121(cfg, ch=3).to(device)
     
     random_input = torch.randn(1, 3, opt.imgsz, opt.imgsz).to(device)
     macs, params = profile(model, inputs=(random_input, ))
@@ -497,7 +503,7 @@ def train(hyp,  # path/to/hyp.yaml or hyp dictionary
 
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='yolov5', choices=['yolov5', 'yolo_repvgg', 'yolo_mobilenet', 'yolo_efficientnet', 'yolo_ghostnet', 'yolo_mobilenetv3', 'yolo_resnet18'])
+    parser.add_argument('--model', type=str, default='yolov5', choices=['yolov5', 'yolo_repvgg', 'yolo_mobilenet', 'yolo_efficientnet', 'yolo_ghostnet', 'yolo_mobilenetv3', 'yolo_resnet18', 'yolo_inceptionv4', 'yolo_densenet121'])
     parser.add_argument('--weights', type=str, default=' ', help='initial weights path')
     parser.add_argument('--cfg', type=str, default='models/yolov5s.yaml', help='model.yaml path')
     parser.add_argument('--data', type=str, default='data/VOC.yaml', help='dataset.yaml path')

@@ -19,8 +19,34 @@ $ cd Yolov5_pytorch
 $ python train.py --model yolo_resnet18 --cfg models/yolo_resnet18.yaml
 ```
 
-- test or demonstrate like original Yolov5.
+- demostrate
+
+```
+$ python demo --weights runs/train/yolov5s/weights/best.pt --source ../datasets/VOC/images/test2007/000001.jpg --output runs/detect/yolov5s/
+```
 
 ## Results
 
-- 
+- train 
+
+![train results](images/results.jpg)
+
+- evaluation
+
+![map05VSflops](images/map05VSflops.png)
+
+![map05VSparams](images/map05VSparams.png)
+
+![map0595VSflops](images/map0595VSflops.png)
+
+![map0595VSparams](images/map0595VSparams.png)
+
+![recallVSflops](images/recallVSflops.png)
+
+![recallVSparams](images/recallVSparams.png)
+
+## Notice
+
+This repository is based on [YOLOv5 by ultralytics](https://github.com/ultralytics/yolov5).
+
+So code files may lack comments.
